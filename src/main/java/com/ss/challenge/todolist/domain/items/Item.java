@@ -31,12 +31,26 @@ public class Item {
 
     private LocalDateTime doneAt;
 
+    public static Item createItem(String description, LocalDateTime createdAt, LocalDateTime dueAt) {
+        return new Item()
+                .setStatus(ItemStatus.NOT_DONE)
+                .setCreatedAt(createdAt)
+                .setDescription(description)
+                .setDueAt(dueAt);
+    }
+
     private Item setStatus(ItemStatus status) {
         this.status = status;
         return this;
     }
 
     private Item setDescription(String description) {
+        if (description == null)
+            throw new IllegalArgumentException("Item description cannot be NULL");
+
+        if (description.isBlank())
+            throw new IllegalArgumentException("Item description cannot be Empty or only have spaces");
+
         this.description = description;
         return this;
     }
@@ -47,6 +61,15 @@ public class Item {
     }
 
     private Item setDueAt(LocalDateTime dueAt) {
+        if (dueAt == null)
+            throw new IllegalArgumentException("Item dueAt date cannot be NULL");
+
+        if (dueAt.isBefore(this.createdAt))
+            throw new IllegalArgumentException("Item due date needs to be after the creation date");
+
+        if (dueAt.isBefore(LocalDateTime.now()))
+            throw new IllegalArgumentException("Item dueAt date needs to be a date in the future");
+
         this.dueAt = dueAt;
         return this;
     }
