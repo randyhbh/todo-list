@@ -1,8 +1,6 @@
 package com.ss.challenge.todolist.domain.items;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,16 +16,17 @@ public class Item {
     @SequenceGenerator(name = "item_gen", sequenceName = "item_seq")
     private Long id;
 
-    @Column(length = 15)
+    @Column(length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
     private ItemStatus status;
 
-    @NotNull
-    @NotEmpty
+    @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     private LocalDateTime dueAt;
 
     private LocalDateTime doneAt;
