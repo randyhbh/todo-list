@@ -1,5 +1,7 @@
 package com.ss.challenge.todolist.domain.items;
 
+import com.ss.challenge.todolist.domain.items.exceptions.ItemInForbiddenStatusException;
+import com.ss.challenge.todolist.domain.items.exceptions.ItemWithDueDateInThePastException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,9 +51,29 @@ public class Item {
         return this.setStatus(ItemStatus.DONE).setDoneAt(completedAt);
     }
 
+    public Item reOpen(LocalDateTime reOpenAt) {
+        checkIfStatusIsNotPastDueOrThrow();
+        checkIfDueDateIsInTheFutureOrThrow(reOpenAt);
+
+        if (this.status == ItemStatus.NOT_DONE)
+            return this;
+
+        return this.setStatus(ItemStatus.NOT_DONE).setDoneAt(null);
+    }
+
+    private void checkIfDueDateIsInTheFutureOrThrow(LocalDateTime reOpenAt) throws ItemWithDueDateInThePastException {
+        if (this.dueAt.isBefore(reOpenAt))
+            throw new ItemWithDueDateInThePastException("Item with 'id' " + this.id + " is past the due date and cannot be modified");
+    }
+
     private void checkIfStatusIsNotPastDueOrThrow() throws ItemInForbiddenStatusException {
         if (this.status == ItemStatus.PAST_DUE)
             throw new ItemInForbiddenStatusException("Item with 'id' " + this.id + " has status " + ItemStatus.PAST_DUE + " and cannot be modified");
+    }
+
+    private void checkIfStatusIsNotNotDoneOrThrow() throws ItemInForbiddenStatusException {
+        if (this.status != ItemStatus.NOT_DONE)
+            throw new ItemInForbiddenStatusException("Item with 'id' " + this.id + " expected the status to be " + ItemStatus.NOT_DONE + " but " + this.status + " found");
     }
 
     private Item setStatus(ItemStatus status) {

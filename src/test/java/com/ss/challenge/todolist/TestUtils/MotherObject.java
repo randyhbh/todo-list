@@ -9,7 +9,7 @@ public class MotherObject {
         return Item.createItem(description, createdAt, dueAt);
     }
 
-    public static Item createDoneItem(String description, LocalDateTime createdAt, LocalDateTime dueAt, LocalDateTime completedAt) {
+    public static Item createCompleteItem(String description, LocalDateTime createdAt, LocalDateTime dueAt, LocalDateTime completedAt) {
         var item = createItem(description, createdAt, dueAt);
         item.markCompleted(completedAt);
         return item;

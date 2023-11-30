@@ -1,6 +1,7 @@
 package com.ss.challenge.todolist.api.http;
 
 import com.ss.challenge.todolist.domain.items.exceptions.ItemInForbiddenStatusException;
+import com.ss.challenge.todolist.domain.items.exceptions.ItemWithDueDateInThePastException;
 import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,21 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             WebRequest request
     ) {
-        logger.error("Error processing request", exception);
+        return getObjectResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, exception, headers, request);
+    }
 
-        HttpStatus forbidden = HttpStatus.FORBIDDEN;
-        ProblemDetail body = ProblemDetail.forStatusAndDetail(forbidden, exception.getMessage());
-        return createResponseEntity(body, headers, forbidden, request);
+    @ExceptionHandler(ItemWithDueDateInThePastException.class)
+    public ResponseEntity<Object> handleItemWithDueDateInThePast(
+            ItemWithDueDateInThePastException exception,
+            HttpHeaders headers,
+            WebRequest request
+    ) {
+        return getObjectResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, exception, headers, request);
+    }
+
+    private ResponseEntity<Object> getObjectResponseEntity(HttpStatus status, Exception exception, HttpHeaders headers, WebRequest request) {
+        logger.error("Error processing request", exception);
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(status, exception.getMessage());
+        return createResponseEntity(body, headers, status, request);
     }
 }
