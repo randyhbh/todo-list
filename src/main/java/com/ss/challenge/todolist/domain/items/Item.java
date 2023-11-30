@@ -39,6 +39,16 @@ public class Item {
                 .setDueAt(dueAt);
     }
 
+    public Item updateDescription(String description) {
+        checkIfStatusIsNotPastDueOrThrow();
+        return this.setDescription(description);
+    }
+
+    private void checkIfStatusIsNotPastDueOrThrow() throws ItemInForbiddenStatusException {
+        if (this.status == ItemStatus.PAST_DUE)
+            throw new ItemInForbiddenStatusException("Item with 'id' " + this.id + " has status " + ItemStatus.PAST_DUE + " and cannot be modified");
+    }
+
     private Item setStatus(ItemStatus status) {
         this.status = status;
         return this;

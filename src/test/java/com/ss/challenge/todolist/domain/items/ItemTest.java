@@ -27,11 +27,40 @@ class ItemTest {
     }
 
     @Test
-    void updateDescription() {
+    void checkUpdateItemDescriptionIsSuccessful() {
+        var description = "Test Description";
+        var createdAt = LocalDateTime.now();
+        var dueAt = LocalDateTime.now().plusMinutes(1);
+
+        var item = MotherObject.createItem(description, createdAt, dueAt);
+
+        String newDescription = "New description";
+        item.updateDescription(newDescription);
+
+        Assertions.assertThat(item.getDescription())
+                .isNotNull()
+                .isNotEqualTo(description)
+                .isEqualTo(newDescription);
     }
 
     @Test
-    void markCompleted() {
+    void checkUpdateItemDescriptionThrowsExceptionForItemWithStatusPastDue() {
+        var description = "Test Description";
+        var createdAt = LocalDateTime.now().minusMinutes(1);
+        var dueAt = LocalDateTime.now();
+
+        var item = MotherObject.createPastDueItem(description, createdAt, dueAt);
+
+        String exceptionMessage = "Item with 'id' null has status PAST_DUE and cannot be modified";
+        ItemInForbiddenStatusException exception = assertThrows(
+                ItemInForbiddenStatusException.class,
+                () -> item.updateDescription("New description")
+        );
+
+
+        Assertions.assertThat(exception.getMessage())
+                .isNotNull()
+                .isEqualTo(exceptionMessage);
     }
 
     @Test

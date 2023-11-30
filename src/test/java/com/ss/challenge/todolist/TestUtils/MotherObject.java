@@ -9,4 +9,9 @@ public class MotherObject {
         return Item.createItem(description, createdAt, dueAt);
     }
 
+    public static Item createPastDueItem(String description, LocalDateTime createdAt, LocalDateTime dueAt) {
+        var item = createItem(description, createdAt, dueAt);
+        item.markPastDue();
+        return item;
+    }
 }
