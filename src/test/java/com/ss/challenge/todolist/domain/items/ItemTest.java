@@ -48,8 +48,8 @@ class ItemTest {
     @Test
     void checkUpdateItemDescriptionThrowsExceptionForItemWithStatusPastDue() {
         var description = "Test Description";
-        var createdAt = LocalDateTime.now().minusMinutes(1);
-        var dueAt = LocalDateTime.now();
+        var createdAt = LocalDateTime.now();
+        var dueAt = LocalDateTime.now().plusMinutes(1);
 
         var item = MotherObject.createPastDueItem(description, createdAt, dueAt);
 
@@ -109,7 +109,7 @@ class ItemTest {
         var item = MotherObject.createCompleteItem(description, createdAt, dueAt, completedAt);
 
         Assertions.assertThat(item.getStatus()).isEqualTo(ItemStatus.DONE);
-        Assertions.assertThat(item.getDoneAt()).isEqualToIgnoringNanos(LocalDateTime.now());
+        Assertions.assertThat(item.getDoneAt()).isEqualTo(completedAt);
 
         item.reOpen(LocalDateTime.now());
         Assertions.assertThat(item.getStatus()).isEqualTo(ItemStatus.NOT_DONE);
