@@ -44,6 +44,11 @@ public class Item {
         return this.setDescription(description);
     }
 
+    public Item markCompleted(LocalDateTime completedAt) {
+        checkIfStatusIsNotPastDueOrThrow();
+        return this.setStatus(ItemStatus.DONE).setDoneAt(completedAt);
+    }
+
     private void checkIfStatusIsNotPastDueOrThrow() throws ItemInForbiddenStatusException {
         if (this.status == ItemStatus.PAST_DUE)
             throw new ItemInForbiddenStatusException("Item with 'id' " + this.id + " has status " + ItemStatus.PAST_DUE + " and cannot be modified");

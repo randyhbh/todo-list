@@ -64,6 +64,37 @@ class ItemTest {
     }
 
     @Test
-    void markOpen() {
+    void checkMarkingAnItemAsCompletedIsSuccessful() {
+        var description = "Test Description";
+        var createdAt = LocalDateTime.now();
+        var dueAt = LocalDateTime.now().plusMinutes(1);
+
+        var item = MotherObject.createItem(description, createdAt, dueAt);
+
+        item.markCompleted(LocalDateTime.now());
+
+        Assertions.assertThat(item.getStatus()).isEqualTo(ItemStatus.DONE);
+        Assertions.assertThat(item.getDoneAt()).isEqualToIgnoringNanos(LocalDateTime.now());
     }
+
+    @Test
+    void checkMarkingAnItemAsCompletedThrowsExceptionForItemWithStatusPastDue() {
+        var description = "Test Description";
+        var createdAt = LocalDateTime.now().minusMinutes(1);
+        var dueAt = LocalDateTime.now().plusMinutes(1);
+
+        var item = MotherObject.createPastDueItem(description, createdAt, dueAt);
+
+        String exceptionMessage = "Item with 'id' null has status PAST_DUE and cannot be modified";
+        ItemInForbiddenStatusException exception = assertThrows(
+                ItemInForbiddenStatusException.class,
+                () -> item.markCompleted(LocalDateTime.now().plusMinutes(2))
+        );
+
+
+        Assertions.assertThat(exception.getMessage())
+                .isNotNull()
+                .isEqualTo(exceptionMessage);
+    }
+
 }

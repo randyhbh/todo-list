@@ -10,12 +10,15 @@ public class ItemsEndpoint {
 
     private final CreateItemUseCase createItem;
     private final UpdateItemUseCase updateItem;
+    private final CompleteItemUseCase completeItem;
     public ItemsEndpoint(
             CreateItemUseCase createItemUseCase,
             UpdateItemUseCase updateItemUseCase,
+            CompleteItemUseCase completeItemUseCase,
     ) {
         this.createItem = createItemUseCase;
         this.updateItem = updateItemUseCase;
+        this.completeItem = completeItemUseCase;
     }
 
     @PostMapping
@@ -28,5 +31,11 @@ public class ItemsEndpoint {
     @ResponseStatus(HttpStatus.OK)
     public void updateItemDescription(@PathVariable Long id, @Valid @RequestBody UpdateItemDescriptionRequest request) {
         updateItem.update(UpdateItemCommand.fromRequest(request, id));
+    }
+
+    @PatchMapping("/{id}/complete-item")
+    @ResponseStatus(HttpStatus.OK)
+    public void complete(@PathVariable Long id) {
+        completeItem.complete(CompleteItemCommand.fromRequest(id));
     }
 }

@@ -9,6 +9,12 @@ public class MotherObject {
         return Item.createItem(description, createdAt, dueAt);
     }
 
+    public static Item createDoneItem(String description, LocalDateTime createdAt, LocalDateTime dueAt, LocalDateTime completedAt) {
+        var item = createItem(description, createdAt, dueAt);
+        item.markCompleted(completedAt);
+        return item;
+    }
+
     public static Item createPastDueItem(String description, LocalDateTime createdAt, LocalDateTime dueAt) {
         var item = createItem(description, createdAt, dueAt);
         item.markPastDue();

@@ -54,5 +54,4 @@ class UpdateItemUseCaseTest {
         Assertions.assertThat(itemFromDb.getDescription()).isNotNull().isEqualTo(description);
         Assertions.assertThat(itemFromDb.getStatus()).isNotNull().isEqualTo(ItemStatus.NOT_DONE);
     }
-
 }
