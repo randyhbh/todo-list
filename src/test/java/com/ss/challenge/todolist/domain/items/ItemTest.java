@@ -171,4 +171,38 @@ class ItemTest {
                 .isEqualTo(exceptionMessage);
     }
 
+    @Test
+    void checkMarkAnItemAsPastDueIsSuccessful() {
+        var description = "Test Description";
+        var createdAt = LocalDateTime.now();
+        var dueAt = LocalDateTime.now().plusMinutes(1);
+
+        var item = MotherObject.createItem(description, createdAt, dueAt);
+
+        item.markPastDue();
+
+        Assertions.assertThat(item.getStatus()).isEqualTo(ItemStatus.PAST_DUE);
+        Assertions.assertThat(item.getDoneAt()).isNull();
+    }
+
+    @Test
+    void checkMarkAnItemAsPastDueThrowsExceptionForItemWithStatusDone() {
+        var description = "Test Description";
+        var createdAt = LocalDateTime.now().minusMinutes(2);
+        var completedAt = LocalDateTime.now().minusMinutes(1);
+        var dueAt = LocalDateTime.now();
+
+        var item = MotherObject.createCompleteItem(description, createdAt, dueAt, completedAt);
+
+        String exceptionMessage = "Item with 'id' null expected the status to be NOT_DONE but DONE found";
+        ItemInForbiddenStatusException exception = assertThrows(
+                ItemInForbiddenStatusException.class,
+                item::markPastDue
+        );
+
+
+        Assertions.assertThat(exception.getMessage())
+                .isNotNull()
+                .isEqualTo(exceptionMessage);
+    }
 }

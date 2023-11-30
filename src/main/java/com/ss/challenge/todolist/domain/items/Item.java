@@ -61,6 +61,11 @@ public class Item {
         return this.setStatus(ItemStatus.NOT_DONE).setDoneAt(null);
     }
 
+    public void markPastDue() {
+        checkIfStatusIsNotNotDoneOrThrow();
+        this.setStatus(ItemStatus.PAST_DUE);
+    }
+
     private void checkIfDueDateIsInTheFutureOrThrow(LocalDateTime reOpenAt) throws ItemWithDueDateInThePastException {
         if (this.dueAt.isBefore(reOpenAt))
             throw new ItemWithDueDateInThePastException("Item with 'id' " + this.id + " is past the due date and cannot be modified");
