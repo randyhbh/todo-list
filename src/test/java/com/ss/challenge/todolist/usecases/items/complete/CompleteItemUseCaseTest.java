@@ -40,7 +40,7 @@ class CompleteItemUseCaseTest {
 
     @Test
     @Sql("classpath:scripts/INIT_ONE_NOT_DONE_ITEM.sql")
-    public void checkUpdateItemIsSuccessful() {
+    public void checkCompleteItemIsSuccessful() {
         var itemId = 1L;
         var updateItemCommand = CompleteItemCommand.fromRequest(itemId);
 

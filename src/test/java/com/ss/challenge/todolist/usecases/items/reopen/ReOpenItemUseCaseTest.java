@@ -29,7 +29,7 @@ class ReOpenItemUseCaseTest {
     }
 
     @Test
-    public void checkUpdateItemThrowsExceptionWhenItemDoesNotExist() {
+    public void checkReOpenItemThrowsExceptionWhenItemDoesNotExist() {
         var itemId = 2L;
         var reOpenItemCommand = ReOpenItemCommand.fromRequest(itemId);
 
@@ -40,7 +40,7 @@ class ReOpenItemUseCaseTest {
 
     @Test
     @Sql("classpath:scripts/INIT_ONE_DONE_ITEM.sql")
-    public void checkUpdateItemIsSuccessful() {
+    public void checkReOpenItemIsSuccessful() {
         var itemId = 2L;
         var reOpenItemCommand = ReOpenItemCommand.fromRequest(itemId);
 
