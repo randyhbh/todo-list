@@ -1,0 +1,156 @@
+openapi: 3.0.1
+info:
+  title: '"TodoList API"'
+  description: TodoList API challenge
+  license:
+    name: Apache 2.0
+    url: https://springdoc.org
+  version: 0.0.1-SNAPSHOT
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /items:
+    get:
+      tags:
+      - items-endpoint
+      operationId: find
+      parameters:
+      - name: "false"
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemResponse'
+    post:
+      tags:
+      - items-endpoint
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemRequest'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+  /items/{id}/update-description:
+    patch:
+      tags:
+      - items-endpoint
+      operationId: updateItemDescription
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemDescriptionRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /items/{id}/re-open-item:
+    patch:
+      tags:
+      - items-endpoint
+      operationId: reOpen
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /items/{id}/complete-item:
+    patch:
+      tags:
+      - items-endpoint
+      operationId: complete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /items/{id}:
+    get:
+      tags:
+      - items-endpoint
+      operationId: details
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ItemResponse'
+components:
+  schemas:
+    CreateItemRequest:
+      required:
+      - description
+      - dueAt
+      type: object
+      properties:
+        description:
+          type: string
+        dueAt:
+          type: string
+          format: date-time
+    ItemResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          type: string
+        dueAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - NOT_DONE
+          - DONE
+          - PAST_DUE
+    UpdateItemDescriptionRequest:
+      required:
+      - description
+      type: object
+      properties:
+        description:
+          type: string
