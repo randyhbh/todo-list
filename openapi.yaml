@@ -14,6 +14,7 @@ paths:
     get:
       tags:
       - items-endpoint
+      summary: Returns a list of items filtered by status
       operationId: find
       parameters:
       - name: "false"
@@ -33,6 +34,7 @@ paths:
     post:
       tags:
       - items-endpoint
+      summary: Create a new item
       operationId: create
       requestBody:
         content:
@@ -41,6 +43,12 @@ paths:
               $ref: '#/components/schemas/CreateItemRequest'
         required: true
       responses:
+        "400":
+          description: Invalid request body supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         "201":
           description: Created
           content:
@@ -51,6 +59,7 @@ paths:
     patch:
       tags:
       - items-endpoint
+      summary: Update item description by id
       operationId: updateItemDescription
       parameters:
       - name: id
@@ -66,12 +75,31 @@ paths:
               $ref: '#/components/schemas/UpdateItemDescriptionRequest'
         required: true
       responses:
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "400":
+          description: Invalid request body supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         "200":
           description: OK
   /items/{id}/re-open-item:
     patch:
       tags:
       - items-endpoint
+      summary: Update the item status to NOT_DONE by id
       operationId: reOpen
       parameters:
       - name: id
@@ -81,12 +109,25 @@ paths:
           type: integer
           format: int64
       responses:
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         "200":
           description: OK
   /items/{id}/complete-item:
     patch:
       tags:
       - items-endpoint
+      summary: Update the item status to DONE by id
       operationId: complete
       parameters:
       - name: id
@@ -96,12 +137,25 @@ paths:
           type: integer
           format: int64
       responses:
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         "200":
           description: OK
   /items/{id}:
     get:
       tags:
       - items-endpoint
+      summary: Return item details by id
       operationId: details
       parameters:
       - name: id
@@ -111,6 +165,12 @@ paths:
           type: integer
           format: int64
       responses:
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
         "200":
           description: OK
           content:
@@ -130,6 +190,26 @@ components:
         dueAt:
           type: string
           format: date-time
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        properties:
+          type: object
+          additionalProperties:
+            type: object
     ItemResponse:
       type: object
       properties:
