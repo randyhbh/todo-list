@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.2
 FROM maven:3.9.5-eclipse-temurin-17-alpine as builder
 
 WORKDIR application
@@ -5,7 +6,7 @@ WORKDIR application
 COPY pom.xml .
 COPY src src
 
-RUN mvn install -DskipTests
+RUN --mount=type=cache,target=/root/.m2 mvn install -DskipTests
 RUN java -Djarmode=layertools -jar target/*.jar extract
 
 FROM eclipse-temurin:17-jdk
