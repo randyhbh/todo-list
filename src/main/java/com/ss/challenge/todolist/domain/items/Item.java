@@ -48,6 +48,10 @@ public class Item {
 
     public Item markCompleted(LocalDateTime completedAt) {
         checkIfStatusIsNotPastDueOrThrow();
+
+        if (this.status == ItemStatus.DONE)
+            return this;
+
         return this.setStatus(ItemStatus.DONE).setDoneAt(completedAt);
     }
 
@@ -63,6 +67,10 @@ public class Item {
 
     public void markPastDue() {
         checkIfStatusIsNotNotDoneOrThrow();
+
+        if (this.status == ItemStatus.PAST_DUE)
+            return;
+
         this.setStatus(ItemStatus.PAST_DUE);
     }
 
