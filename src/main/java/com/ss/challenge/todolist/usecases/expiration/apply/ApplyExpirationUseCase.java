@@ -25,13 +25,10 @@ public class ApplyExpirationUseCase {
 
     @Transactional
     @Scheduled(cron = "${scheduler.tasks.item-past-due.interval}")
-    public void setExpirationDueToItems() {
-        try (Stream<Item> dueItems = repository.findNotClosedExpiredItems()) {
-            List<Item> expirations = dueItems.peek(Item::markPastDue).collect(Collectors.toList());
-            repository.saveAllAndFlush(expirations);
-            if (logger.isDebugEnabled()) {
-                logger.info(expirations.size() + "->Items where set to " + ItemStatus.PAST_DUE);
-            }
+    public void setExpirationDueToItemsWithUpdateQuery() {
+        var updatedItems = repository.setPastDueOnExpiredItems();
+        if (logger.isDebugEnabled()) {
+            logger.info(updatedItems + "->Items where set to " + ItemStatus.PAST_DUE);
         }
     }
 }
