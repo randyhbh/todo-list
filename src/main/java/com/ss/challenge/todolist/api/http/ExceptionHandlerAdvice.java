@@ -2,11 +2,11 @@ package com.ss.challenge.todolist.api.http;
 
 import com.ss.challenge.todolist.domain.items.exceptions.ItemInForbiddenStatusException;
 import com.ss.challenge.todolist.domain.items.exceptions.ItemWithDueDateInThePastException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -26,27 +26,42 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
         this.logger = logger;
     }
 
-    @ExceptionHandler(ItemInForbiddenStatusException.class)
-    public ResponseEntity<Object> handleItemInForbiddenStatus(
-            ItemInForbiddenStatusException exception,
-            HttpHeaders headers,
-            WebRequest request
-    ) {
-        return getObjectResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, exception, headers, request);
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected ResponseEntity<Object> handleNotFound(RuntimeException exception, WebRequest request) {
+        String message = exception.getMessage() != null ? exception.getMessage() : "";
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, message);
+        return handleExceptionInternal(exception, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(ItemWithDueDateInThePastException.class)
-    public ResponseEntity<Object> handleItemWithDueDateInThePast(
-            ItemWithDueDateInThePastException exception,
-            HttpHeaders headers,
-            WebRequest request
-    ) {
-        return getObjectResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, exception, headers, request);
+    @ExceptionHandler({ItemInForbiddenStatusException.class, ItemWithDueDateInThePastException.class, IllegalArgumentException.class})
+    public ResponseEntity<ProblemDetail> handleUnprocessableEntity(Exception exception, WebRequest request) {
+        return getObjectResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, exception, new HttpHeaders());
     }
 
-    private ResponseEntity<Object> getObjectResponseEntity(HttpStatus status, Exception exception, HttpHeaders headers, WebRequest request) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ProblemDetail> onConstraintValidationException(ConstraintViolationException exception, HttpHeaders headers) {
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+        exception
+                .getConstraintViolations()
+                .forEach(violation -> body.setProperty(violation.getPropertyPath().toString(), violation.getMessage()));
+        return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+        exception
+                .getBindingResult()
+                .getFieldErrors()
+                .forEach(fieldError -> body.setProperty(fieldError.getField(), fieldError.getDefaultMessage()));
+
+        return new ResponseEntity<>(body, exception.getHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<ProblemDetail> getObjectResponseEntity(HttpStatus statusCode, Exception exception, HttpHeaders headers) {
         logger.error("Error processing request", exception);
-        ProblemDetail body = ProblemDetail.forStatusAndDetail(status, exception.getMessage());
-        return createResponseEntity(body, headers, status, request);
+        String message = exception.getMessage() != null ? exception.getMessage() : "";
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(statusCode, message);
+        return new ResponseEntity<>(body, headers, statusCode);
     }
 }
