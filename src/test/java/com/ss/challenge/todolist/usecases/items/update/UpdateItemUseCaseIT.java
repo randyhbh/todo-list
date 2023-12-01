@@ -14,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-class UpdateItemUseCaseTest {
+class UpdateItemUseCaseIT {
 
     @Autowired
     private ItemRepository itemRepository;

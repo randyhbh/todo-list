@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-class FindItemsUseCaseTest {
+class FindItemsUseCaseIT {
 
     @Autowired
     private ItemRepository itemRepository;

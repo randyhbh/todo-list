@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-class CompleteItemUseCaseTest {
+class CompleteItemUseCaseIT {
 
     @Autowired
     private ItemRepository itemRepository;

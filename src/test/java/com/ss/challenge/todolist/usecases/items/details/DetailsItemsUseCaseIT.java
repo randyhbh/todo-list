@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-class DetailsItemsUseCaseTest {
+class DetailsItemsUseCaseIT {
 
     @Autowired
     private ItemRepository itemRepository;

@@ -1,9 +1,7 @@
 package com.ss.challenge.todolist.usecases.items.reopen;
 
-import com.ss.challenge.todolist.api.http.requests.UpdateItemDescriptionRequest;
 import com.ss.challenge.todolist.domain.items.ItemStatus;
 import com.ss.challenge.todolist.infra.persistence.h2.ItemRepository;
-import com.ss.challenge.todolist.usecases.items.update.UpdateItemCommand;
 import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-class ReOpenItemUseCaseTest {
+class ReOpenItemUseCaseIT {
 
     @Autowired
     private ItemRepository itemRepository;

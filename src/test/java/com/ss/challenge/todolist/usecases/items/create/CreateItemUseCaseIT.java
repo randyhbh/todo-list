@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @DataJpaTest
-class CreateItemUseCaseTest {
+class CreateItemUseCaseIT {
 
     @Autowired
     private ItemRepository itemRepository;
