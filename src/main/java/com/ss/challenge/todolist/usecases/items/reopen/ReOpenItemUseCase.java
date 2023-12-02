@@ -25,7 +25,9 @@ public class ReOpenItemUseCase {
     @Transactional
     public void reOpen(ReOpenItemCommand itemCommand) {
         Item item = itemRepository.getReferenceById(itemCommand.getItemId());
+
         itemRepository.save(item.reOpen(LocalDateTime.now()));
+
         if (logger.isDebugEnabled()) {
             logger.info("Item id: " + item.getId() + " was reopened");
         }

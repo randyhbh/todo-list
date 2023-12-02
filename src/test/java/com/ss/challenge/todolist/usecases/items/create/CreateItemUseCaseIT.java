@@ -6,6 +6,7 @@ import com.ss.challenge.todolist.infra.persistence.h2.ItemRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -24,7 +25,7 @@ class CreateItemUseCaseIT {
 
     @BeforeEach
     void setUp() {
-        createItemUseCase = new CreateItemUseCase(itemRepository);
+        createItemUseCase = new CreateItemUseCase(NOPLogger.NOP_LOGGER, itemRepository);
     }
 
     @Test

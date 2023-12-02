@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class is a use case responsible for checking when an item is due and changing the status.
+ */
 @Component
 public class ApplyExpirationUseCase {
 

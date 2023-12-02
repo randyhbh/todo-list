@@ -7,6 +7,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.helpers.NOPLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -23,7 +24,7 @@ class UpdateItemUseCaseIT {
 
     @BeforeEach
     void setUp() {
-        updateItemUseCase = new UpdateItemUseCase(itemRepository);
+        updateItemUseCase = new UpdateItemUseCase(NOPLogger.NOP_LOGGER, itemRepository);
     }
 
     @Test

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * This class is a use case responsible for creating a new item for the todo-list.
+ * This class is a use case responsible for find all items by status.
  */
 @Service
 public class FindItemsUseCase {

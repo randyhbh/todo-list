@@ -128,4 +128,9 @@ public class Item {
         this.doneAt = doneAt;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "Item{id=%d, status=%s, description='%s'}".formatted(id, status, description);
+    }
 }

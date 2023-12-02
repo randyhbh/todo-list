@@ -4,6 +4,7 @@ import com.ss.challenge.todolist.api.http.mappers.ItemResponseMapper;
 import com.ss.challenge.todolist.api.http.responses.ItemResponse;
 import com.ss.challenge.todolist.domain.items.Item;
 import com.ss.challenge.todolist.infra.persistence.h2.ItemRepository;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +16,11 @@ import java.time.LocalDateTime;
 @Service
 public class CreateItemUseCase {
 
+    private final Logger logger;
     private final ItemRepository repository;
 
-    public CreateItemUseCase(ItemRepository repository) {
+    public CreateItemUseCase(Logger logger, ItemRepository repository) {
+        this.logger = logger;
         this.repository = repository;
     }
 
@@ -29,6 +32,11 @@ public class CreateItemUseCase {
                 itemCommand.getDueAt()
         );
         repository.save(item);
+
+        if (logger.isDebugEnabled()) {
+            logger.info("New " + item + " created");
+        }
+
         return ItemResponseMapper.toResponse(item);
     }
 }
