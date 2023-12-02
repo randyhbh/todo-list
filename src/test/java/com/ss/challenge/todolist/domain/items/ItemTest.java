@@ -53,7 +53,28 @@ class ItemTest {
 
         var item = MotherObject.createPastDueItem(description, createdAt, dueAt);
 
-        String exceptionMessage = "Item with 'id' null has status PAST_DUE and cannot be modified";
+        String exceptionMessage = "Item with 'id' null expected the status to be NOT_DONE but PAST_DUE found";
+        ItemInForbiddenStatusException exception = assertThrows(
+                ItemInForbiddenStatusException.class,
+                () -> item.updateDescription("New description")
+        );
+
+
+        Assertions.assertThat(exception.getMessage())
+                .isNotNull()
+                .isEqualTo(exceptionMessage);
+    }
+
+    @Test
+    void checkUpdateItemDescriptionThrowsExceptionForItemWithStatusDone() {
+        var description = "Test Description";
+        var createdAt = LocalDateTime.now();
+        var completedAt = LocalDateTime.now().plusMinutes(1);
+        var dueAt = LocalDateTime.now().plusMinutes(2);
+
+        var item = MotherObject.createCompleteItem(description, createdAt, dueAt, completedAt);
+
+        String exceptionMessage = "Item with 'id' null expected the status to be NOT_DONE but DONE found";
         ItemInForbiddenStatusException exception = assertThrows(
                 ItemInForbiddenStatusException.class,
                 () -> item.updateDescription("New description")

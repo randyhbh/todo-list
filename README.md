@@ -34,6 +34,8 @@ The initial `status` will be `NOT_DONE` and the created date will be value of ca
 When wanting to change the description of an already existent item, providing a new value is mandatory and no empty or null
 values are accepted.
 
+You wont be allowed to change the description of items with status in `PAST_DUE` or `DONE`
+
 If the item does not exist a response telling this is returned.
 
 ### Mark an item as "done"

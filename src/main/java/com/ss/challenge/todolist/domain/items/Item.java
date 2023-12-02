@@ -42,7 +42,7 @@ public class Item {
     }
 
     public Item updateDescription(String description) {
-        checkIfStatusIsNotPastDueOrThrow();
+        checkIfStatusIsNotNotDoneOrThrow();
         return this.setDescription(description);
     }
 
@@ -131,6 +131,7 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{id=%d, status=%s, description='%s'}".formatted(id, status, description);
+        return "Item{id=%d, status=%s, description='%s', createdAt=%s, dueAt=%s, doneAt=%s}"
+                .formatted(id, status, description, createdAt, dueAt, doneAt);
     }
 }
