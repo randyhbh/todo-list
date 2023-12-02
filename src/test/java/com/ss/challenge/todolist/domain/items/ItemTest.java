@@ -149,7 +149,7 @@ class ItemTest {
     @Test
     void checkReOpeningAItemThrowsExceptionForItemWithStatusPastDue() {
         var createdAt = LocalDateTime.now().minusMinutes(1);
-        var dueAt = LocalDateTime.now();
+        var dueAt = LocalDateTime.now().plusMinutes(1);
 
         var item = ItemMother.createPastDue(createdAt, dueAt);
 
@@ -204,7 +204,7 @@ class ItemTest {
     void checkMarkAnItemAsPastDueThrowsExceptionForItemWithStatusDone() {
         var createdAt = LocalDateTime.now().minusMinutes(2);
         var completedAt = LocalDateTime.now().minusMinutes(1);
-        var dueAt = LocalDateTime.now();
+        var dueAt = LocalDateTime.now().plusMinutes(1);
 
         var item = ItemMother.createCompleted(createdAt, dueAt, completedAt);
 
