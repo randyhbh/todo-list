@@ -1,6 +1,6 @@
 package com.ss.challenge.todolist.domain.items;
 
-import com.ss.challenge.todolist.TestUtils.MotherObject;
+import com.ss.challenge.todolist.TestUtils.ItemMother;
 import com.ss.challenge.todolist.domain.items.exceptions.ItemInForbiddenStatusException;
 import com.ss.challenge.todolist.domain.items.exceptions.ItemWithDueDateInThePastException;
 import org.assertj.core.api.Assertions;
@@ -18,7 +18,7 @@ class ItemTest {
         var createdAt = LocalDateTime.now();
         var dueAt = LocalDateTime.now().plusMinutes(1);
 
-        var item = MotherObject.createItem(description, createdAt, dueAt);
+        var item = Item.createItem(description, createdAt, dueAt);
 
         Assertions.assertThat(ItemStatus.NOT_DONE).isEqualTo(item.getStatus());
         Assertions.assertThat(item.getDescription()).isNotNull().isEqualTo(description);
@@ -34,7 +34,7 @@ class ItemTest {
         var createdAt = LocalDateTime.now();
         var dueAt = LocalDateTime.now().plusMinutes(1);
 
-        var item = MotherObject.createItem(description, createdAt, dueAt);
+        var item = ItemMother.create(description, createdAt, dueAt);
 
         String newDescription = "New description";
         item.updateDescription(newDescription);
@@ -47,11 +47,10 @@ class ItemTest {
 
     @Test
     void checkUpdateItemDescriptionThrowsExceptionForItemWithStatusPastDue() {
-        var description = "Test Description";
         var createdAt = LocalDateTime.now();
         var dueAt = LocalDateTime.now().plusMinutes(1);
 
-        var item = MotherObject.createPastDueItem(description, createdAt, dueAt);
+        var item = ItemMother.createPastDue(createdAt, dueAt);
 
         String exceptionMessage = "Item with 'id' null expected the status to be NOT_DONE but PAST_DUE found";
         ItemInForbiddenStatusException exception = assertThrows(
@@ -67,12 +66,11 @@ class ItemTest {
 
     @Test
     void checkUpdateItemDescriptionThrowsExceptionForItemWithStatusDone() {
-        var description = "Test Description";
         var createdAt = LocalDateTime.now();
         var completedAt = LocalDateTime.now().plusMinutes(1);
         var dueAt = LocalDateTime.now().plusMinutes(2);
 
-        var item = MotherObject.createCompleteItem(description, createdAt, dueAt, completedAt);
+        var item = ItemMother.createCompleted(createdAt, dueAt, completedAt);
 
         String exceptionMessage = "Item with 'id' null expected the status to be NOT_DONE but DONE found";
         ItemInForbiddenStatusException exception = assertThrows(
@@ -92,7 +90,7 @@ class ItemTest {
         var createdAt = LocalDateTime.now();
         var dueAt = LocalDateTime.now().plusMinutes(1);
 
-        var item = MotherObject.createItem(description, createdAt, dueAt);
+        var item = ItemMother.create(description, createdAt, dueAt);
 
         item.markCompleted(LocalDateTime.now());
 
@@ -102,11 +100,10 @@ class ItemTest {
 
     @Test
     void checkMarkingAnItemAsCompletedThrowsExceptionForItemWithStatusPastDue() {
-        var description = "Test Description";
         var createdAt = LocalDateTime.now().minusMinutes(1);
         var dueAt = LocalDateTime.now().plusMinutes(1);
 
-        var item = MotherObject.createPastDueItem(description, createdAt, dueAt);
+        var item = ItemMother.createPastDue(createdAt, dueAt);
 
         String exceptionMessage = "Item with 'id' null has status PAST_DUE and cannot be modified";
         ItemInForbiddenStatusException exception = assertThrows(
@@ -122,12 +119,11 @@ class ItemTest {
 
     @Test
     void checkReOpeningACompletedItemIsSuccessful() {
-        var description = "Test Description";
         var createdAt = LocalDateTime.now();
         var completedAt = LocalDateTime.now().plusMinutes(2);
         var dueAt = LocalDateTime.now().plusMinutes(5);
 
-        var item = MotherObject.createCompleteItem(description, createdAt, dueAt, completedAt);
+        var item = ItemMother.createCompleted(createdAt, dueAt, completedAt);
 
         Assertions.assertThat(item.getStatus()).isEqualTo(ItemStatus.DONE);
         Assertions.assertThat(item.getDoneAt()).isEqualTo(completedAt);
@@ -143,7 +139,7 @@ class ItemTest {
         var createdAt = LocalDateTime.now();
         var dueAt = LocalDateTime.now().plusMinutes(1);
 
-        var item = MotherObject.createItem(description, createdAt, dueAt);
+        var item = ItemMother.create(description, createdAt, dueAt);
 
         item.reOpen(LocalDateTime.now());
         Assertions.assertThat(item.getStatus()).isEqualTo(ItemStatus.NOT_DONE);
@@ -152,11 +148,10 @@ class ItemTest {
 
     @Test
     void checkReOpeningAItemThrowsExceptionForItemWithStatusPastDue() {
-        var description = "Test Description";
         var createdAt = LocalDateTime.now().minusMinutes(1);
         var dueAt = LocalDateTime.now();
 
-        var item = MotherObject.createPastDueItem(description, createdAt, dueAt);
+        var item = ItemMother.createPastDue(createdAt, dueAt);
 
         String exceptionMessage = "Item with 'id' null has status PAST_DUE and cannot be modified";
         ItemInForbiddenStatusException exception = assertThrows(
@@ -171,14 +166,13 @@ class ItemTest {
     }
 
     @Test
-    void checkReOpeningAItemThrowsExceptionForItemWhenCreateDateIsBiggerThanDueDate() {
-        var description = "Test Description";
+    void checkReOpeningAnItemThrowsExceptionForItemWhenCreateDateIsBiggerThanDueDate() {
         var createdAt = LocalDateTime.now();
         var completedAt = createdAt.plusMinutes(1);
         var dueAt = createdAt.plusMinutes(5);
         var reOpenAt = dueAt.plusMinutes(1);
 
-        var item = MotherObject.createCompleteItem(description, createdAt, dueAt, completedAt);
+        var item = ItemMother.createCompleted(createdAt, dueAt, completedAt);
 
         String exceptionMessage = "Item with 'id' null is past the due date and cannot be modified";
         ItemWithDueDateInThePastException exception = assertThrows(
@@ -198,7 +192,7 @@ class ItemTest {
         var createdAt = LocalDateTime.now();
         var dueAt = LocalDateTime.now().plusMinutes(1);
 
-        var item = MotherObject.createItem(description, createdAt, dueAt);
+        var item = ItemMother.create(description, createdAt, dueAt);
 
         item.markPastDue();
 
@@ -208,12 +202,11 @@ class ItemTest {
 
     @Test
     void checkMarkAnItemAsPastDueThrowsExceptionForItemWithStatusDone() {
-        var description = "Test Description";
         var createdAt = LocalDateTime.now().minusMinutes(2);
         var completedAt = LocalDateTime.now().minusMinutes(1);
         var dueAt = LocalDateTime.now();
 
-        var item = MotherObject.createCompleteItem(description, createdAt, dueAt, completedAt);
+        var item = ItemMother.createCompleted(createdAt, dueAt, completedAt);
 
         String exceptionMessage = "Item with 'id' null expected the status to be NOT_DONE but DONE found";
         ItemInForbiddenStatusException exception = assertThrows(
