@@ -1,3 +1,4 @@
+## Techstack used
 ## Code Structure
 
 The service strives to follow the clean architecture approach
@@ -71,5 +72,49 @@ to update the entire resource and POST would indicate creating a new resource al
 
 In reaching this decision, the Zalando API guidelines were heavily consulted. See: [Zalando REST API guidelines](https://opensource.zalando.com/restful-api-guidelines/#patch)
 
-## How to build the service
-- 
+## Technical Details
+
+The service is written in Java and uses:
+* Spring Boot 3.2.0 as an underlying framework.
+* [Liquibase](https://www.liquibase.org/)
+* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html) as build tool
+* [Spring Web](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#web)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#data.sql.jpa-and-spring-data) to access and persist data between Java object/ class.
+* [Liquibase Migration](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#howto.data-initialization.migration-tool.liquibase) to manage database migrations.
+* [Validation](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#io.validation) for Bean validation.
+* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#actuator) to expose operational information.
+
+### System requirements
+
+In order to build and run this project, you need the following components:
+
+- Java 17 (recommend [Eclipse Temurin 17](https://adoptium.net/temurin/releases/?version=17))
+- Docker (or a compatible container runtime)
+
+### Running the service with an IDE (i.e. IntelliJ IDEA)
+
+Cloning the service and running it:
+```sh
+git clone https://github.com/randyhbh/todo-list.git
+
+cd todo-list
+
+./mvnw clean verify spring-boot:run
+```
+
+### Running the unit tests independently
+```sh
+./mvnw test
+```
+
+### Running the integration tests independently
+```sh
+./mvnw -DskipUnit=true verify
+```
+
+### Running the service with docker. Make sure docker is running!
+```sh
+docker build -t challenge/todo-list .
+
+docker run --name todo-list -d -p 8080:8080 challenge/todo-list
+```
