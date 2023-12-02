@@ -1,0 +1,2 @@
+INSERT INTO item (id, status, description, created_at, done_at, due_at)
+VALUES (2, 'DONE', 'test description', TIMESTAMPADD('MINUTE', -5, now()), TIMESTAMPADD('MINUTE', -3, now()), TIMESTAMPADD('MINUTE', -2, now()));
