@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-class ApplyExpirationUseCaseTest {
+class ApplyExpirationUseCaseIT {
 
     @Autowired
     private ItemRepository itemRepository;
