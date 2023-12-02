@@ -39,7 +39,7 @@ class ReOpenItemUseCaseIT {
     @Test
     @Sql("classpath:scripts/INIT_ONE_DONE_ITEM.sql")
     public void checkReOpenItemIsSuccessful() {
-        var itemId = 2L;
+        var itemId = 1L;
         var reOpenItemCommand = ReOpenItemCommand.fromRequest(itemId);
 
         reOpenItemUseCase.reOpen(reOpenItemCommand);
