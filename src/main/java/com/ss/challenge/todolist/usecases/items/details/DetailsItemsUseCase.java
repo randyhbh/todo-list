@@ -22,7 +22,6 @@ public class DetailsItemsUseCase {
         this.repository = repository;
     }
 
-    @Transactional
     public ItemResponse details(DetailsItemsCommand detailsItemsCommand) {
         Item item = repository.getReferenceById(detailsItemsCommand.getId());
 
