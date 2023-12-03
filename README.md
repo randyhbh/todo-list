@@ -1,4 +1,56 @@
-## Techstack used
+## Technical Details
+
+### Techs tack used
+
+The service is written in Java and uses:
+* Spring Boot 3.2.0 as an underlying framework.
+* [Liquibase](https://www.liquibase.org/)
+* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html) as build tool
+* [Spring Web](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#web)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#data.sql.jpa-and-spring-data) to access and persist data between Java object/ class.
+* [Liquibase Migration](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#howto.data-initialization.migration-tool.liquibase) to manage database migrations.
+* [Validation](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#io.validation) for Bean validation.
+* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#actuator) to expose operational information.
+
+### System requirements
+
+In order to build and run this project, you need the following components:
+
+- Java 17 (recommend [Eclipse Temurin 17](https://adoptium.net/temurin/releases/?version=17))
+- Docker (or a compatible container runtime)
+
+### Running the service with an IDE (i.e. IntelliJ IDEA)
+
+Cloning the service and running it:
+```sh
+git clone https://github.com/randyhbh/todo-list.git
+
+cd todo-list
+
+./mvnw clean verify spring-boot:run
+```
+
+### Running the unit tests independently
+```sh
+./mvnw test
+```
+
+### Running the integration tests independently
+```sh
+./mvnw -DskipUnit=true verify
+```
+
+### Running the service with docker. Make sure docker is running!
+```sh
+docker build -t challenge/todo-list .
+
+docker run --name todo-list -d -p 8080:8080 challenge/todo-list
+```
+
+## OpenAPI documentation
+The OpenAPI documentation for the API is available in [openapi.yaml](openapi.yaml). The OpenAPI is also exposed on the 
+http://localhost:8080/swagger-ui/index.html address when the service is running locally and can be tested from there.
+
 ## Code Structure
 
 The service strives to follow the clean architecture approach
@@ -7,15 +59,11 @@ The service strives to follow the clean architecture approach
 
 (source: https://medium.com/swlh/clean-architecture-a-little-introduction-be3eac94c5d1)
 
-All API endpoints are located in `com.ss.challenge.todolist.api` package. The OpeanAPI documentation for the API is
-available in [openapi.yaml](openapi.yaml).
-
-Interfacing with external systems (ex: databases) is limited to `com.ss.challenge.todolist.infra` package.
+All API endpoints are located in [com.ss.challenge.todolist.api](src/main/java/com/ss/challenge/todolist/api/http) package. 
+Interfacing with external systems (ex: databases) is limited to [com.ss.challenge.todolist.infra](src/main/java/com/ss/challenge/todolist/infra) 
+package. API Use-cases implementations are located in [com.ss.challenge.todolist.usecases](src/main/java/com/ss/challenge/todolist/usecases)
 
 ### Important to notice
-Use-cases are located in `com.ss.challenge.todolist.usecases` contain the application logic and depend only on domain 
-entities. 
-
 To shorten the implementation and reduce the complexity, I'm using on the domain entity the JPA annotations and Spring 
 Data JPA to take care of the database queries, if we were to follow clean architecture to the letter we would need to 
 have an entity that represents our domain and one that represents our persistence layer having a Repository interface
@@ -71,50 +119,3 @@ PATCH was chosen as the preferred HTTP verb for the complete and re-open endpoin
 to update the entire resource and POST would indicate creating a new resource altogether.
 
 In reaching this decision, the Zalando API guidelines were heavily consulted. See: [Zalando REST API guidelines](https://opensource.zalando.com/restful-api-guidelines/#patch)
-
-## Technical Details
-
-The service is written in Java and uses:
-* Spring Boot 3.2.0 as an underlying framework.
-* [Liquibase](https://www.liquibase.org/)
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html) as build tool
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#web)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#data.sql.jpa-and-spring-data) to access and persist data between Java object/ class.
-* [Liquibase Migration](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#howto.data-initialization.migration-tool.liquibase) to manage database migrations.
-* [Validation](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#io.validation) for Bean validation.
-* [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/3.2.0/reference/htmlsingle/index.html#actuator) to expose operational information.
-
-### System requirements
-
-In order to build and run this project, you need the following components:
-
-- Java 17 (recommend [Eclipse Temurin 17](https://adoptium.net/temurin/releases/?version=17))
-- Docker (or a compatible container runtime)
-
-### Running the service with an IDE (i.e. IntelliJ IDEA)
-
-Cloning the service and running it:
-```sh
-git clone https://github.com/randyhbh/todo-list.git
-
-cd todo-list
-
-./mvnw clean verify spring-boot:run
-```
-
-### Running the unit tests independently
-```sh
-./mvnw test
-```
-
-### Running the integration tests independently
-```sh
-./mvnw -DskipUnit=true verify
-```
-
-### Running the service with docker. Make sure docker is running!
-```sh
-docker build -t challenge/todo-list .
-
-docker run --name todo-list -d -p 8080:8080 challenge/todo-list
-```
