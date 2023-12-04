@@ -104,7 +104,7 @@ An endpoint has been provided from which the entire Item can be fetched.
 We achieve this in the current implementation using the Spring Scheduler and checking every 5 seconds for all items with 
 `status=NOT_DONE` and `due date before now()` and setting them to `PAST_DUE`.
 
-#### Important notice about the scheduled task using @Scheduler from Spring Boot
+### Important notice about the scheduled task using @Scheduler from Spring Boot
 This solution is not considering scalability, if we were to deploy this in a distributed environment where we would have 
 multiple instances of our application running in parallel, we could not ensure the scheduler synchronization between them.
 
