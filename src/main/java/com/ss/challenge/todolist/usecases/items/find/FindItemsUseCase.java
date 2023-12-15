@@ -24,6 +24,7 @@ public class FindItemsUseCase {
         this.repository = repository;
     }
 
+    @Transactional
     public List<ItemResponse> find(FindItemsCommand findItemsCommand) {
         try (Stream<Item> items = repository.streamByStatusIn(Arrays.asList(findItemsCommand.getStatuses()))){
             return items.map(ItemResponseMapper::toResponse).collect(Collectors.toList());
